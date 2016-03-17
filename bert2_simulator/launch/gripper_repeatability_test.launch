@@ -1,0 +1,57 @@
+<launch>
+  <!-- Created by David Western, March 2016 -->
+
+  <!-- roslaunch arguments -->
+  <arg name="paused" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="gui" default="true"/>
+
+  <include file="$(find bert2_simulator)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find bert2_simulator)/worlds/bert2_empty.world" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="headless" value="false" />
+  </include>
+
+  <!-- Load robot to Parameter Server-->
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find bert2_simulator)/robots/bert2_robot.urdf.xacro'" />
+  <node name="bert2_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+    args="-urdf -param robot_description -model bert2" />
+
+  <!-- Load cylindrical object -->
+  <!-- Two versions: object on robot base and object on raised pedestal. Pick one. -->
+        <!-- Object on base -->
+  <!-- param name="object_description" command="$(find xacro)/xacro.py '$(find bert2_simulator)/robots/bert2_object.urdf.xacro'" />
+  <node name="object_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+    args="-urdf -param object_description -model object -x 0.3 -y -0.3 -z 0.555" /--> 
+        <!-- Object on raised pedestal -->
+  <!--param name="pedestal_description" command="$(find xacro)/xacro.py '$(find bert2_simulator)/robots/pedestal.urdf.xacro'" />
+  <node name="pedestal_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+    args="-urdf -param pedestal_description -model pedestal -x 0.3 -y -0.3 -z 1" / --> 
+  <param name="object_description" command="$(find xacro)/xacro.py '$(find bert2_simulator)/robots/bert2_object.urdf.xacro'" />
+  <node name="object_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+    args="-urdf -param object_description -model object -x 0.3 -y -0.44 -z 1.2" /> 
+    
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find bert2_simulator)/config/joint_controllers.yaml" command="load"/> 
+
+  <!-- Load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/bert2" args="hip_rotor_joint_posControlr hip_flexor_joint_posControlr neck_flexor_joint_posControlr neck_rotor_joint_posControlr left_shoulder_flex_joint_posControlr left_shoulder_abduction_joint_posControlr left_humeral_rot_joint_posControlr left_elbow_flex_joint_posControlr left_wrist_pronation_joint_posControlr left_wrist_abduction_joint_posControlr left_wrist_flex_joint_posControlr left_index_finger_flex_joint_posControlr left_index_finger2_flex_joint_posControlr left_mid_finger_flex_joint_posControlr left_mid_finger2_flex_joint_posControlr  left_anular_finger_flex_joint_posControlr left_anular_finger2_flex_joint_posControlr left_little_finger_flex_joint_posControlr left_little_finger2_flex_joint_posControlr left_thumb_flex_joint_posControlr left_thumb2_flex_joint_posControlr right_shoulder_flex_joint_posControlr joint_state_controller"/>
+
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">
+  <remap from="/joint_states" to="/bert2/joint_states"/>
+  </node>
+
+  <include file="$(find bert2_moveit)/launch/move_group.launch" />
+
+  <node name="bert2_gazebo_motor_controller" pkg="bert2_simulator" type="bert2_gazebo_motor_controller.py" respawn="false" output="screen" />
+
+  <node name="robot_high_level_control" pkg="bert2_simulator" type="robot_solo.py" respawn="false" output="screen" />
+
+</launch>

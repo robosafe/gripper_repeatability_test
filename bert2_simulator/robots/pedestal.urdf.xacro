@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="pedestal">
+  <xacro:include filename="$(find bert2_simulator)/urdf/pedestal.urdf.xacro" />
+</robot>
+
