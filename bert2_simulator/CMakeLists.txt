@@ -48,12 +48,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   Human.msg
-   Robot.msg
-   Sensors.msg
-   Gaze.msg
-   Pressure.msg
-   Location.msg
    Joints.msg
    Hand.msg
  )
@@ -188,11 +182,3 @@ find_package(Protobuf REQUIRED)
 find_package(gazebo REQUIRED)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
-
-add_executable(trigger_bouncer scripts/trigger_bouncer.cpp)
-target_link_libraries(trigger_bouncer ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES} ${PROTOBUF_LIBRARIES} pthread)
-add_dependencies(trigger_bouncer ${catkin_EXPORTED_TARGETS})
-
-add_executable(contacts_bouncer scripts/contacts_bouncer.cpp)
-target_link_libraries(contacts_bouncer ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES} ${PROTOBUF_LIBRARIES} pthread)
-add_dependencies(contacts_bouncer ${catkin_EXPORTED_TARGETS})

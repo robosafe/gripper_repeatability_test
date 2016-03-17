@@ -2,12 +2,12 @@
 <package>
   <name>bert2_simulator</name>
   <version>0.0.1</version>
-  <description>The bert2_simulator package</description>
+  <description>The bert2_simulator package, in reduced form for gripper_repeatability_test</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="dejanira.araizaillan@bristol.ac.uk">Dejanira Araiza-Illan</maintainer>
+  <maintainer email="david.western@bristol.ac.uk">David Western</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
